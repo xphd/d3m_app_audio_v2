@@ -3,8 +3,7 @@
 <v-data-table
     :headers="headers"
     :items="audios"
-    :pagination.sync="pagination"
-    :rows-per-page-items="[5,10,25]"
+    :pagination.sync="pagination"    
     hide-actions
     class="elevation-1"
   >
@@ -20,26 +19,22 @@
       <v-pagination v-model="pagination.page" :length="pages"></v-pagination>
     </div>
 
-    <!-- <div>
-        <template v-for="audio in audios">
-            <RawAudioViewSingle :audio='audio' :key="audio.id"></RawAudioViewSingle>
-        </template>
-    </div> -->
-    <!-- <p><strong>{{ indexOfLastLoaded+1 }}</strong> of {{ numOfAudioLinks }} Loaded</p>
-    <div v-if="isMoreAudios">
-        Load Another
-        <input type="number" min="1" max="500" v-model.number="numOfEachLoaded"> Videos
-        <button @click="loadAudios()" class="btn btn-success">Go!</button>
+  <div class="container">
+    <div class="row">      
+      <div class="col-md-4" >
+        Jump to Page
+        <input type="number" min="1" :max="pages" v-model.number="page"> 
+        <button @click="setPage()" class="btn btn-success">GO!</button>
+      </div>
+      <div class="col-md-4">
+          Rows per Page     
+        <input type="number" min="1" :max="numOfAudioLinks" v-model.number="itemsPerPage"> 
+        <button @click="setItemsPerPage()" class="btn btn-success">SET</button>
+      </div>      
     </div>
-    <div v-else>
-        <button disabled class="btn btn-warning">No More Audios</button>
-    </div>
-    <br>
-    <div>
-        View First
-        <input type="number" min="1" :max="numOfAudioLinks" v-model.number="numOfLoaded"> Videos
-        <button @click="loadAudiosTotal()" class="btn btn-success">Go!</button>
-    </div> -->
+  </div>  
+
+    
 </div>
 </template>
 
@@ -48,17 +43,14 @@ import RawAudioViewSingle from "./RawAudioViewSingle.vue";
 export default {
   data: function() {
     return {
-      pagination: { rowsPerPage: 5, totalItems: 0 },
+      page: 1,
+      itemsPerPage: 5,
+      pagination: { rowsPerPage: 2, totalItems: 0 },
       headers: [{ text: "ID", value: "id" }, { text: "Link", value: "link" }],
 
-      // numOfFirstLoaded: 15, // number of audios firstly loaded
-      // numOfLoaded: 0, // total number of loaded audio, this is just one more than indexOfLastLoaded
-      // indexOfLastLoaded: -1, // record the index of the last loaded audio
-      // numOfEachLoaded: 10, // numver of audios loaded each time the button is pressed
       audioLinks: [], // list of audios from backend response
-      audios: [] // audio objects, {id, audioLink} where auidoLink is from audioLinks
-      // numOfAudioLinks: 0, // number of audioLinks totally, initialize as 0
-      // isMoreAudios: true
+      audios: [], // audio objects, {id, audioLink} where auidoLink is from audioLinks
+      numOfAudioLinks: 0 // number of audioLinks totally, initialize as 0
     };
   },
   computed: {
@@ -105,42 +97,12 @@ export default {
         index++;
       });
     },
-    // loadAudiosTotal() {
-    //   // calculate the difference between wanted number of loaded audios and current number of loaded audios
-    //   var difference = this.numOfLoaded - (this.indexOfLastLoaded + 1);
-    //   console.log(this.numOfLoaded);
-    //   if (difference >= 0) {
-    //     // if difference > 0, aka wanted more than current, just load more "difference" audios
-    //     this.loadAudios(difference);
-    //   } else {
-    //     // else, pick up the first wanted number of audios, and update something
-    //     this.audios = this.audios.splice(0, this.numOfLoaded);
-    //     this.indexOfLastLoaded = this.numOfLoaded - 1;
-    //     this.isMoreAudios = true;
-    //   }
-    // },
-    // loadAudios(numToLoad = this.numOfEachLoaded) {
-    //   // if there is no more audios, then return
-    //   if (!this.isMoreAudios) {
-    //     return;
-    //   }
-    //   var len = this.numOfAudioLinks;
-    //   var indexLastEnd = this.indexOfLastLoaded;
-    //   var indexEnd = Math.min(indexLastEnd + numToLoad, len - 1);
-    //   this.indexOfLastLoaded = indexEnd;
-    //   for (var i = indexLastEnd + 1; i <= indexEnd; i++) {
-    //     var audio = {
-    //       id: i,
-    //       link: this.audioLinks[i]
-    //     };
-    //     this.audios.push(audio);
-    //   }
-    //   // if all audios have been loaded, indexOfLastLoaded is same as numOfAudioLinks-1, no more audio to load
-    //   if (this.indexOfLastLoaded == this.numOfAudioLinks - 1) {
-    //     this.isMoreAudios = false;
-    //   }
-    // },
-    // emit "getAudioLinks" to backend server
+    setPage() {
+      this.pagination.page = this.page;
+    },
+    setItemsPerPage() {
+      this.pagination.rowsPerPage = this.itemsPerPage;
+    },
     requestAudioLinks() {
       this.$socket.emit("requestAudioLinks");
     }

@@ -1,5 +1,5 @@
 <template>
-<div>
+<div class='container'>
     <p>{{ name }}</p>
     <div v-if="playable">
         <div :id="id"></div>
