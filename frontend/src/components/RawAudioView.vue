@@ -2,7 +2,7 @@
 <div>
     <v-data-table :headers="headers" :items="audios" :pagination.sync="pagination" hide-actions class="elevation-1">
         <template slot="items" slot-scope="props">
-            <td>{{ props.item.id }}</td>
+            <td><strong>{{ props.item.id }}</strong></td>
             <td>
                 <RawAudioViewSingle :audio='props.item' :key="props.item.id"></RawAudioViewSingle>
             </td>
@@ -128,6 +128,6 @@ export default {
 input {
   text-align: right;
   border: 1px solid gray;
-  width: 60px;
+  width: 50px;
 }
 </style>

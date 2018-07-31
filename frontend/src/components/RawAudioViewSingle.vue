@@ -1,6 +1,6 @@
 <template>
 <div class='container'>
-    <h3>Filename: {{ name }}</h3>
+    <h5>Filename: {{ name }}</h5>
     <div v-if="playable">
         <div :id="id"></div>
         <div style="text-align: center">
@@ -70,4 +70,7 @@ export default {
 </script>
 
 <style scoped>
+.container {
+  height: 220px;
+}
 </style>
