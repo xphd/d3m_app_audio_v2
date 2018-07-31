@@ -1,40 +1,33 @@
 <template>
 <div>
-<v-data-table
-    :headers="headers"
-    :items="audios"
-    :pagination.sync="pagination"    
-    hide-actions
-    class="elevation-1"
-  >
-    <template slot="items" slot-scope="props">
-      <td>{{ props.item.id }}</td>
-      <!-- <td>{{ props.item.link }}</td> -->
-      <td>
-        <RawAudioViewSingle :audio='props.item' :key="props.item.id"></RawAudioViewSingle>
-        </td>
-    </template>
-  </v-data-table>
-<div class="text-xs-center pt-2">
-      <v-pagination v-model="pagination.page" :length="pages"></v-pagination>
+    <v-data-table :headers="headers" :items="audios" :pagination.sync="pagination" hide-actions class="elevation-1">
+        <template slot="items" slot-scope="props">
+            <td>{{ props.item.id }}</td>
+            <td>
+                <RawAudioViewSingle :audio='props.item' :key="props.item.id"></RawAudioViewSingle>
+            </td>
+        </template>
+    </v-data-table>
+    <div class="text-xs-center pt-2">
+        <v-pagination v-model="pagination.page" :length="pages"></v-pagination>
     </div>
 
-  <div class="container">
-    <div class="row">      
-      <div class="col-md-4" >
-        Jump to Page
-        <input type="number" min="1" :max="pages" v-model.number="page"> 
-        <button @click="setPage()" class="btn btn-success">GO!</button>
-      </div>
-      <div class="col-md-4">
-          Rows per Page     
-        <input type="number" min="1" :max="numOfAudioLinks" v-model.number="itemsPerPage"> 
-        <button @click="setItemsPerPage()" class="btn btn-success">SET</button>
-      </div>      
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-2"></div>
+            <div class="col-xs-4">
+                Jump to Page
+                <input type="number" min="1" :max="pages" v-model.number="page">
+                <button @click="setPage()" class="btn btn-primary btn-sm">Jump!</button>
+            </div>
+            <div class="col-xs-4">
+                Audios Per Page
+                <input type="number" min="1" :max="numOfAudioLinks" v-model.number="itemsPerPage">
+                <button @click="setItemsPerPage()" class="btn btn-success btn-sm">Go!</button>
+            </div>
+            <div class="col-xs-2"></div>
+        </div>
     </div>
-  </div>  
-
-    
 </div>
 </template>
 
@@ -45,8 +38,22 @@ export default {
     return {
       page: 1,
       itemsPerPage: 5,
-      pagination: { rowsPerPage: 2, totalItems: 0 },
-      headers: [{ text: "ID", value: "id" }, { text: "Link", value: "link" }],
+      pagination: {
+        rowsPerPage: 2,
+        totalItems: 0
+      },
+      headers: [
+        {
+          text: "ID/d3mIndex",
+          value: "id",
+          align: "center"
+        },
+        {
+          text: "Audio Wavesurfer",
+          value: "link",
+          align: "center"
+        }
+      ],
 
       audioLinks: [], // list of audios from backend response
       audios: [], // audio objects, {id, audioLink} where auidoLink is from audioLinks
@@ -80,7 +87,7 @@ export default {
       this.pagination.totalItems = this.numOfAudioLinks;
       // this.loadAudios(this.numOfFirstLoaded); // when get audioLinks from backend, load some of them
       this.toAudiosObj(this.audioLinks);
-      console.log(this.audios.length);
+      // console.log(this.audios.length);
     }
   },
   methods: {
@@ -120,6 +127,7 @@ export default {
 <style scoped>
 input {
   text-align: right;
-  border: 1px solid black;
+  border: 1px solid gray;
+  width: 60px;
 }
 </style>

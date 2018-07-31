@@ -1,6 +1,6 @@
 <template>
 <div class='container'>
-    <p>{{ name }}</p>
+    <h3>Filename: {{ name }}</h3>
     <div v-if="playable">
         <div :id="id"></div>
         <div style="text-align: center">
