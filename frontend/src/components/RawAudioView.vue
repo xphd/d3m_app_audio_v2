@@ -7,10 +7,7 @@
                 <RawAudioViewSingle :audio='props.item' :key="props.item.id"></RawAudioViewSingle>
             </td>
         </template>
-    </v-data-table>
-
-
-    
+    </v-data-table>    
     
     <div class="text-xs-center pt-2">
         <v-pagination v-model="pagination.page" :length="pages"></v-pagination>
@@ -40,10 +37,10 @@ import RawAudioViewSingle from "./RawAudioViewSingle.vue";
 export default {
   data: function() {
     return {
-      page: 1,
+      page: 4,
       itemsPerPage: 5,
       pagination: {
-        rowsPerPage: 3,
+        rowsPerPage: 5,
         totalItems: 0
       },
       headers: [
