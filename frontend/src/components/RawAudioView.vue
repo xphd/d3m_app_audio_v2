@@ -1,14 +1,14 @@
 <template>
 <div>
-    <v-data-table  :headers="headers" :items="audios" :pagination.sync="pagination" hide-actions class="elevation-1">
+    <v-data-table :headers="headers" :items="audios" :pagination.sync="pagination" hide-actions class="elevation-1">
         <template slot="items" slot-scope="props">
             <td><strong>{{ props.item.id }}</strong></td>
             <td>
                 <RawAudioViewSingle :audio='props.item' :key="props.item.id"></RawAudioViewSingle>
             </td>
         </template>
-    </v-data-table>    
-    
+    </v-data-table>
+
     <div class="text-xs-center pt-2">
         <v-pagination v-model="pagination.page" :length="pages"></v-pagination>
     </div>
@@ -23,7 +23,12 @@
             </div>
             <div class="col-xs-4">
                 Audios Per Page
-                <input type="number" min="1" :max="numOfAudios" v-model.number="itemsPerPage">
+                <select v-model.number="itemsPerPage">
+                  <option value="5">5</option>
+                  <option value="10">10</option>
+                  
+                </select>
+
                 <button @click="setItemsPerPage()" class="btn btn-success btn-sm">Go!</button>
             </div>
             <div class="col-xs-2"></div>
@@ -37,10 +42,10 @@ import RawAudioViewSingle from "./RawAudioViewSingle.vue";
 export default {
   data: function() {
     return {
-      page: 4,
+      page: 1,
       itemsPerPage: 5,
       pagination: {
-        rowsPerPage: 5,
+        rowsPerPage: 1,
         totalItems: 0
       },
       headers: [
@@ -107,8 +112,15 @@ export default {
 
 <style scoped>
 input {
-  text-align: right;
+  text-align: center;
   border: 1px solid gray;
+  height: 25px;
   width: 50px;
+}
+select {
+  border: 1px solid gray;
+  height: 25px;
+  width: 50px;
+  appearance: menulist;
 }
 </style>
