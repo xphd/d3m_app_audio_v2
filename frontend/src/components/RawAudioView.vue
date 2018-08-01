@@ -1,6 +1,6 @@
 <template>
 <div>
-    <v-data-table :headers="headers" :items="audios" :pagination.sync="pagination" hide-actions class="elevation-1">
+    <v-data-table  :headers="headers" :items="audios" :pagination.sync="pagination" hide-actions class="elevation-1">
         <template slot="items" slot-scope="props">
             <td><strong>{{ props.item.id }}</strong></td>
             <td>
@@ -8,6 +8,10 @@
             </td>
         </template>
     </v-data-table>
+
+
+    
+    
     <div class="text-xs-center pt-2">
         <v-pagination v-model="pagination.page" :length="pages"></v-pagination>
     </div>
@@ -22,7 +26,7 @@
             </div>
             <div class="col-xs-4">
                 Audios Per Page
-                <input type="number" min="1" :max="numOfAudioLinks" v-model.number="itemsPerPage">
+                <input type="number" min="1" :max="numOfAudios" v-model.number="itemsPerPage">
                 <button @click="setItemsPerPage()" class="btn btn-success btn-sm">Go!</button>
             </div>
             <div class="col-xs-2"></div>
@@ -39,25 +43,26 @@ export default {
       page: 1,
       itemsPerPage: 5,
       pagination: {
-        rowsPerPage: 2,
+        rowsPerPage: 3,
         totalItems: 0
       },
       headers: [
         {
           text: "ID/d3mIndex",
           value: "id",
-          align: "center"
+          align: "left"
         },
         {
           text: "Audio Wavesurfer",
           value: "link",
-          align: "center"
+          align: "left",
+          width: "95%"
         }
       ],
 
-      audioLinks: [], // list of audios from backend response
+      // audioLinks: [], // list of audios from backend response
       audios: [], // audio objects, {id, audioLink} where auidoLink is from audioLinks
-      numOfAudioLinks: 0 // number of audioLinks totally, initialize as 0
+      numOfAudios: 0 // number of audioLinks totally, initialize as 0
     };
   },
   computed: {
@@ -78,44 +83,26 @@ export default {
       // console.log("Client: connect to Server");
     },
     // listen for "returnAudioLinks" emmited from backend with data "audioLinks"
-    responseAudioLinks: function(audioLinks) {
-      // this.$store.dispatch("updateAudioLinks", audioLinks); // update data in store
-      // this.audioLinks = this.$store.getters.getAudioLinks; // update data in this vue object
-      this.$store.audioLinks = audioLinks;
-      this.audioLinks = this.$store.audioLinks;
-      this.numOfAudioLinks = this.audioLinks.length; // update numOfAudioLinks
-      this.pagination.totalItems = this.numOfAudioLinks;
-      // this.loadAudios(this.numOfFirstLoaded); // when get audioLinks from backend, load some of them
-      this.toAudiosObj(this.audioLinks);
-      // console.log(this.audios.length);
+    responseAudios: function(audios) {
+      this.$store.audios = audios;
+      this.audios = this.$store.audios;
+      this.numOfAudios = this.audios.length; // update numOfAudios
+      this.pagination.totalItems = this.numOfAudios;
     }
   },
   methods: {
-    // temporary method, transfer the audioLinks to audios object, later the audioLinks will be removed,
-    // while audios object will be obtained from backend server
-    toAudiosObj(audioLinks) {
-      var index = 0;
-      audioLinks.forEach(audioLink => {
-        var audio = {
-          id: index,
-          link: audioLink
-        };
-        this.audios.push(audio);
-        index++;
-      });
-    },
     setPage() {
       this.pagination.page = this.page;
     },
     setItemsPerPage() {
       this.pagination.rowsPerPage = this.itemsPerPage;
     },
-    requestAudioLinks() {
-      this.$socket.emit("requestAudioLinks");
+    requestAudios() {
+      this.$socket.emit("requestAudios");
     }
   },
   created() {
-    this.requestAudioLinks();
+    this.requestAudios();
     this.numOfLoaded = this.numOfFirstLoaded;
   },
   components: {

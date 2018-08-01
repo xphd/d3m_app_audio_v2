@@ -1,9 +1,10 @@
-var express = require("express");
-var http = require("http");
-var socketIO = require("socket.io");
-var fs = require("fs");
-var app = express();
-var router = express.Router();
+const express = require("express");
+const http = require("http");
+const socketIO = require("socket.io");
+const fs = require("fs");
+// const getMP3Duration = require("get-mp3-duration");
+const app = express();
+const router = express.Router();
 
 const BASE_URL = "http://localhost:3000/";
 
@@ -39,18 +40,29 @@ io.on("connection", socket => {
   console.log("Server: get Client");
 
   // listen to "getAudioLinks" emmited from frontend
-  socket.on("requestAudioLinks", () => {
-    console.log("requestAudioLinks received");
+  socket.on("requestAudios", () => {
+    console.log("requestAudios received");
     // get the list of links to audio file in this server
-    var audioLinks = [];
+    var audios = [];
     const testFolder = "./public/";
+    var index = 0;
     fs.readdirSync(testFolder).forEach(file => {
-      audioLinks.push(BASE_URL + file);
+      // var path = testFolder + file;
+      // var buffer = fs.readFileSync(path);
+      // var duration = getMP3Duration(buffer); // in ms
+      // console.log(duration);
+      var audio = {
+        id: index,
+        link: BASE_URL + file
+        // duration: duration // in ms
+      };
+      audios.push(audio);
+      index++;
     });
 
     // emit "returnAudioLinks" to the frontend with audioLinks
-    socket.emit("responseAudioLinks", audioLinks);
-    console.log("responseAudioLinks emitted");
+    socket.emit("responseAudios", audios);
+    console.log("responseAudios emitted");
   });
 });
 
