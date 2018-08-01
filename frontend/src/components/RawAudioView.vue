@@ -67,15 +67,13 @@ export default {
   },
   computed: {
     pages() {
-      if (
-        this.pagination.rowsPerPage == null ||
-        this.pagination.totalItems == null
-      )
+      var isRowsPerPageNull = this.pagination.rowsPerPage == null;
+      var isTotalItemsNull = this.pagination.totalItems == null;
+      if (isRowsPerPageNull || isTotalItemsNull) {
         return 0;
-
-      return Math.ceil(
-        this.pagination.totalItems / this.pagination.rowsPerPage
-      );
+      }
+      var totalPages = this.pagination.totalItems / this.pagination.rowsPerPage;
+      return Math.ceil(totalPages);
     }
   },
   sockets: {
@@ -103,7 +101,6 @@ export default {
   },
   created() {
     this.requestAudios();
-    this.numOfLoaded = this.numOfFirstLoaded;
   },
   components: {
     RawAudioViewSingle
