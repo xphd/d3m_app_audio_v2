@@ -1,6 +1,9 @@
 <template>
 <div>
-    <div v-if="playable" style="text-align: left">
+
+    <div v-if="playable" style="text-align: right">
+        <span class="name">Filename: <strong>{{ name }}</strong></span>
+        <span id="duration">Duration: <strong>{{ duration }}</strong> seconds</span>
         <button id="backward" class="btn btn-primary btn-sm" @click="wavesurfer.skipBackward()">
             <i class="glyphicon glyphicon-backward"></i>            
         </button>
@@ -10,16 +13,16 @@
         </button>
         <button class="btn btn-primary btn-sm" @click="wavesurfer.skipForward()">
             <i class="glyphicon glyphicon-forward"></i>            
-        </button> 
-         <span>Filename: <strong>{{ name }}</strong></span>
-         <span id="duration" >Duration: <strong>{{ duration }}</strong> seconds</span>         
+        </button>
+
     </div>
     <div v-if="playable">
         <div :id="id"></div>
     </div>
-    <div v-else id="infoUnplayable">
-        <p>Filename: {{ name }}</p>
-        <strong>This Audio Is Not Playable.</strong>
+    <div v-else>
+        <span class="name">Filename: <strong>{{ name }}</strong></span>
+        <br>
+        <span class="name">Audio is <strong>Not Playable!</strong> :-(</span>
     </div>
 </div>
 </template>
@@ -78,10 +81,7 @@ export default {
 </script>
 
 <style scoped>
-#infoUnplayable {
-  text-align: left;
-}
-#duration {
-  float: right;
+.name {
+  float: left;
 }
 </style>
