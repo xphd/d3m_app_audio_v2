@@ -5,6 +5,7 @@
             <td><strong>{{ props.item.id }}</strong></td>
             <td>
                 <RawAudioViewSingle :audio='props.item' :key="props.item.id"></RawAudioViewSingle>
+                <hr>
             </td>
         </template>
     </v-data-table>
@@ -25,10 +26,8 @@
                 Audios Per Page
                 <select v-model.number="itemsPerPage">
                   <option value="5">5</option>
-                  <option value="10">10</option>
-                  
+                  <option value="10">10</option>                  
                 </select>
-
                 <button @click="setItemsPerPage()" class="btn btn-success btn-sm">Go!</button>
             </div>
             <div class="col-xs-2"></div>
@@ -61,8 +60,6 @@ export default {
           width: "95%"
         }
       ],
-
-      // audioLinks: [], // list of audios from backend response
       audios: [], // audio objects, {id, audioLink} where auidoLink is from audioLinks
       numOfAudios: 0 // number of audioLinks totally, initialize as 0
     };
@@ -117,6 +114,7 @@ input {
   height: 25px;
   width: 50px;
 }
+
 select {
   border: 1px solid gray;
   height: 25px;

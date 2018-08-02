@@ -1,31 +1,24 @@
 <template>
 <div>
-    <div id="div1">
-        <div v-if="playable" style="text-align: left">
-            <button id="backward" class="btn btn-primary btn-sm" @click="wavesurfer.skipBackward()">
+    <div v-if="playable" style="text-align: left">
+        <button id="backward" class="btn btn-primary btn-sm" @click="wavesurfer.skipBackward()">
             <i class="glyphicon glyphicon-backward"></i>            
         </button>
-            <button id="" class="btn btn-primary btn-sm" @click="wavesurfer.playPause()">
+        <button id="" class="btn btn-primary btn-sm" @click="wavesurfer.playPause()">
             <i class="glyphicon glyphicon-play"></i>/  
             <i class="glyphicon glyphicon-pause"></i>            
         </button>
-            <button class="btn btn-primary btn-sm" @click="wavesurfer.skipForward()">
+        <button class="btn btn-primary btn-sm" @click="wavesurfer.skipForward()">
             <i class="glyphicon glyphicon-forward"></i>            
-        </button>
-            <!-- <button class="btn btn-primary btn-sm" @click="wavesurfer.toggleMute()">
-            <i class="glyphicon glyphicon-volume-off"></i>             
-        </button> -->
-            <!-- <h5 style="text-align: left">Filename: {{ name }}</h5> -->
-            Filename: {{ name }}
-        </div>
-        <div v-if="playable">
-            <div :id="id"></div>
-        </div>
-        <div v-else >
-            <strong>This Audio Is Not Playable.</strong>
-        </div>
+        </button> Filename: {{ name }}
     </div>
-    <hr>
+    <div v-if="playable">
+        <div :id="id"></div>
+    </div>
+    <div v-else id="infoUnplayable">
+        <p>Filename: {{ name }}</p>
+        <strong>This Audio Is Not Playable.</strong>
+    </div>
 </div>
 </template>
 
@@ -82,7 +75,7 @@ export default {
 </script>
 
 <style scoped>
-#div1 {
-  height: 198px;
+#infoUnplayable {
+  text-align: left;
 }
 </style>
