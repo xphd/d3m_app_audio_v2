@@ -1,7 +1,6 @@
 <template>
 <div>
     <v-data-table :headers="headers" :items="audios" :pagination.sync="pagination" hide-actions class="elevation-1">
-
         <template slot="items" slot-scope="props">
             <tr @mouseenter="rowMouseEnter(props.item.id)" @mouseleave="rowMouseLeave(props.item.id)">
                 <td><strong>{{ props.item.id }}</strong></td>
@@ -11,7 +10,6 @@
                 </td>
             </tr>
         </template>
-
     </v-data-table>
 
     <div class="text-xs-center pt-2" v-on:click="stop">
