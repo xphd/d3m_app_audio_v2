@@ -50,7 +50,7 @@ export default {
       },
       headers: [
         {
-          text: "ID/d3mIndex",
+          text: "ID",
           value: "id",
           align: "left"
         },
