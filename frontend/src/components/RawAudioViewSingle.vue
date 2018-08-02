@@ -12,8 +12,7 @@
             <i class="glyphicon glyphicon-forward"></i>            
         </button> 
          <span>Filename: <strong>{{ name }}</strong></span>
-         <span id="duration" >Duration: <strong>{{ duration }}</strong> seconds</span>
-         
+         <span id="duration" >Duration: <strong>{{ duration }}</strong> seconds</span>         
     </div>
     <div v-if="playable">
         <div :id="id"></div>
@@ -26,7 +25,7 @@
 </template>
 
 <script>
-import { eventBus } from "../main";
+import { eventBus } from "../main"; // listen for "stop" event from parent component
 export default {
   props: ["audio"], // audio is an object with id and url of audio file
   data: function() {
@@ -36,13 +35,12 @@ export default {
       // pass the audio info
       id: "audio" + this.audio.id,
       link: this.audio.link,
-      name: "", // assigned in mounted()
+      name: "", // assigned in mounted(), filename of audio file
       playable: true,
       duration: 0 // in secondes
     };
   },
 
-  // after the template is crated, mount it
   // WaveSurfer is from wavesurfer.min.js, it can be accessed from window
   // that's why to use window.WaveSurfer
   mounted() {
@@ -51,21 +49,25 @@ export default {
       waveColor: "red",
       progressColor: "purple"
     });
-    const ws = this.wavesurfer;
+    const ws = this.wavesurfer; // use ws for shortcut of this.wavesurfer
     ws.load(this.link);
 
     // assign the name of audio file, that is the last part of link
     var temp = this.link.split("/");
     this.name = temp[temp.length - 1];
 
+    // fail to load the audio file, then set playable as false
     ws.on("error", () => {
       this.playable = false;
     });
 
+    // succeed to load, get the duration of audio for display
     ws.on("ready", () => {
       this.duration = Math.round(ws.getDuration() * 100) / 100;
     });
 
+    // once get the "stop" event, and if current audio is playing, stop (reset to begin)
+    // "stop" can be fired when page is changed
     eventBus.$on("stop", () => {
       if (ws.isPlaying()) {
         ws.stop();
