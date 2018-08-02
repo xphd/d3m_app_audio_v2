@@ -10,7 +10,10 @@
         </button>
         <button class="btn btn-primary btn-sm" @click="wavesurfer.skipForward()">
             <i class="glyphicon glyphicon-forward"></i>            
-        </button> Filename: {{ name }}
+        </button> 
+         <span>Filename: <strong>{{ name }}</strong></span>
+         <span id="duration" >Duration: <strong>{{ duration }}</strong> seconds</span>
+         
     </div>
     <div v-if="playable">
         <div :id="id"></div>
@@ -23,35 +26,22 @@
 </template>
 
 <script>
-// const ffprobe = require("ffprobe");
-// const ffprobeStatic = require("ffprobe-static");
 import { eventBus } from "../main";
 export default {
   props: ["audio"], // audio is an object with id and url of audio file
   data: function() {
     return {
-      playable: true,
+      wavesurfer: null, // wavefurfer will be created by WaveSurfer.create()
+
       // pass the audio info
       id: "audio" + this.audio.id,
       link: this.audio.link,
       name: "", // assigned in mounted()
-      // duration: -1, // in secondes
-
-      wavesurfer: null // wavefurfer will be created by WaveSurfer.create()
+      playable: true,
+      duration: 0 // in secondes
     };
   },
-  methods: {
-    // handleError called when audio is not playable
-    setPlayableFalse(message) {
-      this.playable = false;
-    }
-    // getDuration(link) {
-    //   ffprobe(link, null, function(err, info) {
-    //     if (err) console.log(err);
-    //     console.log(info.streams[0].duration);
-    //   });
-    // }
-  },
+
   // after the template is crated, mount it
   // WaveSurfer is from wavesurfer.min.js, it can be accessed from window
   // that's why to use window.WaveSurfer
@@ -61,21 +51,24 @@ export default {
       waveColor: "red",
       progressColor: "purple"
     });
-    this.wavesurfer.load(this.link);
-    this.wavesurfer.on("error", this.setPlayableFalse);
+    const ws = this.wavesurfer;
+    ws.load(this.link);
 
     // assign the name of audio file, that is the last part of link
     var temp = this.link.split("/");
     this.name = temp[temp.length - 1];
 
-    // if (this.playable) {
-    //   this.getDuration(this.link);
-    // }
-  },
-  created() {
+    ws.on("error", () => {
+      this.playable = false;
+    });
+
+    ws.on("ready", () => {
+      this.duration = Math.round(ws.getDuration() * 100) / 100;
+    });
+
     eventBus.$on("stop", () => {
-      if (this.wavesurfer.isPlaying()) {
-        this.wavesurfer.pause();
+      if (ws.isPlaying()) {
+        ws.stop();
       }
     });
   }
@@ -85,5 +78,8 @@ export default {
 <style scoped>
 #infoUnplayable {
   text-align: left;
+}
+#duration {
+  float: right;
 }
 </style>
