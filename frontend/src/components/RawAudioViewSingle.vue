@@ -25,6 +25,7 @@
 <script>
 // const ffprobe = require("ffprobe");
 // const ffprobeStatic = require("ffprobe-static");
+import { eventBus } from "../main";
 export default {
   props: ["audio"], // audio is an object with id and url of audio file
   data: function() {
@@ -70,6 +71,13 @@ export default {
     // if (this.playable) {
     //   this.getDuration(this.link);
     // }
+  },
+  created() {
+    eventBus.$on("stop", () => {
+      if (this.wavesurfer.isPlaying()) {
+        this.wavesurfer.pause();
+      }
+    });
   }
 };
 </script>

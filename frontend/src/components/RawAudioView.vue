@@ -10,9 +10,9 @@
         </template>
     </v-data-table>
 
-    <div class="text-xs-center pt-2">
-        <v-pagination v-model="pagination.page" :length="pages"></v-pagination>
-    </div>
+    <div class="text-xs-center pt-2" v-on:click="stop"> 
+        <v-pagination v-model="pagination.page" :length="pages" ></v-pagination>
+    </div>    
 
     <div class="container">
         <div class="row">
@@ -38,6 +38,7 @@
 
 <script>
 import RawAudioViewSingle from "./RawAudioViewSingle.vue";
+import { eventBus } from "../main";
 export default {
   data: function() {
     return {
@@ -64,6 +65,7 @@ export default {
       numOfAudios: 0 // number of audioLinks totally, initialize as 0
     };
   },
+
   computed: {
     pages() {
       var isRowsPerPageNull = this.pagination.rowsPerPage == null;
@@ -88,11 +90,16 @@ export default {
     }
   },
   methods: {
+    stop() {
+      eventBus.$emit("stop");
+    },
     setPage() {
       this.pagination.page = this.page;
+      this.stop();
     },
     setItemsPerPage() {
       this.pagination.rowsPerPage = this.itemsPerPage;
+      stop();
     },
     requestAudios() {
       this.$socket.emit("requestAudios");
