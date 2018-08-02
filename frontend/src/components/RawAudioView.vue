@@ -1,18 +1,22 @@
 <template>
 <div>
     <v-data-table :headers="headers" :items="audios" :pagination.sync="pagination" hide-actions class="elevation-1">
+
         <template slot="items" slot-scope="props">
-            <td><strong>{{ props.item.id }}</strong></td>
-            <td>
-                <RawAudioViewSingle :audio='props.item' :key="props.item.id"></RawAudioViewSingle>
-                <hr>
-            </td>
+            <tr @mouseenter="rowMouseEnter(props.item.id)" @mouseleave="rowMouseLeave(props.item.id)">
+                <td><strong>{{ props.item.id }}</strong></td>
+                <td>
+                    <RawAudioViewSingle :audio='props.item' :key="props.item.id"></RawAudioViewSingle>
+                    <hr>
+                </td>
+            </tr>
         </template>
+
     </v-data-table>
 
-    <div class="text-xs-center pt-2" v-on:click="stop"> 
-        <v-pagination v-model="pagination.page" :length="pages" ></v-pagination>
-    </div>    
+    <div class="text-xs-center pt-2" v-on:click="stop">
+        <v-pagination v-model="pagination.page" :length="pages"></v-pagination>
+    </div>
 
     <div class="container">
         <div class="row">
@@ -43,9 +47,9 @@ export default {
   data: function() {
     return {
       page: 1,
-      itemsPerPage: 5,
+      itemsPerPage: 3,
       pagination: {
-        rowsPerPage: 1,
+        rowsPerPage: 3,
         totalItems: 0
       },
       headers: [
@@ -90,6 +94,12 @@ export default {
     }
   },
   methods: {
+    rowMouseEnter(id) {
+      console.log("Mouse enter", id);
+    },
+    rowMouseLeave(id) {
+      console.log("Mouse leave", id);
+    },
     stop() {
       eventBus.$emit("stop");
     },

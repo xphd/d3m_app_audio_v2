@@ -1,6 +1,5 @@
 <template>
 <div>
-
     <div v-if="playable" style="text-align: right">
         <span class="name">Filename: <strong>{{ name }}</strong></span>
         <span id="duration">Duration: <strong>{{ duration }}</strong> seconds</span>
@@ -14,14 +13,12 @@
         <button class="btn btn-primary btn-sm" @click="wavesurfer.skipForward()">
             <i class="glyphicon glyphicon-forward"></i>            
         </button>
-
     </div>
     <div v-if="playable">
         <div :id="id"></div>
     </div>
     <div v-else>
-        <span class="name">Filename: <strong>{{ name }}</strong></span>
-        <br>
+        <span class="name">Filename: <strong>{{ name }}</strong></span><br>
         <span class="name">Audio is <strong>Not Playable!</strong> :-(</span>
     </div>
 </div>
