@@ -9,9 +9,9 @@
   "author": "Alex",
   "license": "MIT",
   "dependencies": {
+    "csvtojson": "^2.0.8",
     "express": "^4.16.3",
-    "ffprobe": "^1.1.0",
-    "ffprobe-static": "^2.0.0",
+    "fast-csv": "^2.4.1",
     "socket.io": "^2.1.1"
   },
   "devDependencies": {
