@@ -7,33 +7,96 @@ const jsonContents = JSON.parse(contents);
 
 // console.log(jsonContents);
 
-var path = jsonContents.dataResources[0].resPath;
-console.log(path);
+// console.log(jsonContents.dataResources);
 
-var csvPath = jsonContents.dataResources[1].resPath;
-console.log(csvPath);
+var print = c => {
+  console.log(c);
+};
 
-var col1 = jsonContents.dataResources[1].columns[0]["colIndex"];
-console.log("col1", typeof col1);
+var drs = jsonContents.dataResources;
 
-var col2 = jsonContents.dataResources[1].columns[1]["colIndex"];
-console.log("col2", col2);
+// print(typeof drs[0]["resID"]);
 
-var role = jsonContents.dataResources[1].columns[0]["role"];
-console.log(role.includes("index"));
+// console.log(drs.length);
+var audioResIDs = {}; // dictionary/map, key is resID while value is dataResource object,
+// for quick finding the corresponding dataResource element
+var tables = []; // all dataResource element whose resType is "table", csv file
+drs.forEach(dr => {
+  // print(dr["resID"]);
+  if (dr["resType"] === "audio") {
+    audioResIDs[dr["resID"]] = dr;
+  } else if (dr["resType"] === "table") {
+    tables.push(dr);
+  }
+});
 
-const csvFilePath = csvPath;
-console.log("==========");
-csv({ noheader: false })
-  .fromFile(csvFilePath)
-  .on("csv", row => {
-    console.log(row);
-    console.log(row[0]);
-    console.log(row[1]);
-  })
-  .on("done", error => {
-    console.log("end");
+tables.forEach(table => {
+  const csvFilePath = table["resPath"];
+  var columns = table["columns"];
+  var index_d3mIndex = -1;
+  var index_filename = -1;
+
+  var audiosPath = "";
+  // inner loop
+  columns.forEach(column => {
+    if (column["colName"] === "d3mIndex") {
+      index_d3mIndex = column["colIndex"];
+    } else if (column["refersTo"]) {
+      index_filename = column["colIndex"];
+      var resID = column["refersTo"]["resID"];
+
+      if (resID in audioResIDs) {
+        audiosPath = audioResIDs[resID]["resPath"];
+      }
+    }
   });
+  // deal with rows in table
+  console.log(audiosPath);
+  console.log(csvFilePath);
+
+  // const csvFilePath = csvPath;
+  console.log("==========");
+  csv({ noheader: false })
+    .fromFile(csvFilePath)
+    .on("csv", row => {
+      // console.log(row);
+      console.log(row[0]);
+      console.log(row[1]);
+    })
+    .on("done", error => {
+      console.log("end");
+    });
+});
+
+// print(audioResIDs);
+
+// var path = jsonContents.dataResources[0].resPath;
+// console.log(path);
+
+// var csvPath = jsonContents.dataResources[1].resPath;
+// console.log(csvPath);
+
+// var col1 = jsonContents.dataResources[1].columns[0]["colIndex"];
+// console.log("col1", typeof col1);
+
+// var col2 = jsonContents.dataResources[1].columns[1]["colIndex"];
+// console.log("col2", col2);
+
+// var role = jsonContents.dataResources[1].columns[0]["role"];
+// console.log(role.includes("index"));
+
+// const csvFilePath = csvPath;
+// console.log("==========");
+// csv({ noheader: false })
+//   .fromFile(csvFilePath)
+//   .on("csv", row => {
+//     console.log(row);
+//     console.log(row[0]);
+//     console.log(row[1]);
+//   })
+//   .on("done", error => {
+//     console.log("end");
+//   });
 
 // csv()
 //   .fromFile(csvFilePath)
