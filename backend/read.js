@@ -5,24 +5,11 @@ const contents = fs.readFileSync("datasetDoc.json");
 
 const jsonContents = JSON.parse(contents);
 
-// console.log(jsonContents);
-
-// console.log(jsonContents.dataResources);
-
-var print = c => {
-  console.log(c);
-};
-
 var drs = jsonContents.dataResources;
 
-// print(typeof drs[0]["resID"]);
-
-// console.log(drs.length);
 var audioResIDs = {}; // dictionary/map, key is resID while value is dataResource object,
-// for quick finding the corresponding dataResource element
 var tables = []; // all dataResource element whose resType is "table", csv file
 drs.forEach(dr => {
-  // print(dr["resID"]);
   if (dr["resType"] === "audio") {
     audioResIDs[dr["resID"]] = dr;
   } else if (dr["resType"] === "table") {
@@ -30,7 +17,26 @@ drs.forEach(dr => {
   }
 });
 
+var audioTables = []; // among all tables, only some of them are for audio
 tables.forEach(table => {
+  const columns = table["columns"];
+  for (var i = 0; i < columns.length; i++) {
+    const column = columns[i];
+    if (column["refersTo"]) {
+      const resID = column["refersTo"]["resID"];
+      if (resID in audioResIDs) {
+        audioTables.push(table);
+        console.log(resID);
+        break;
+      }
+    }
+  }
+});
+
+var count = 0;
+const numOfAudioTables = audioTables.length;
+
+audioTables.forEach(table => {
   const csvFilePath = table["resPath"];
   var columns = table["columns"];
   var index_d3mIndex = -1;
@@ -50,23 +56,20 @@ tables.forEach(table => {
       }
     }
   });
-  // deal with rows in table
-  console.log(audiosPath);
-  console.log(csvFilePath);
 
-  // const csvFilePath = csvPath;
-  console.log("==========");
+  // console.log("==========");
   csv({ noheader: false })
     .fromFile(csvFilePath)
-    .on("csv", row => {
-      // console.log(row);
-      console.log(row[0]);
-      console.log(row[1]);
-    })
+    .on("csv", row => {})
     .on("done", error => {
-      console.log("end");
+      count++;
+      if (count === numOfAudioTables) {
+        console.log("All done");
+      }
     });
 });
+
+// console.log("tables end");
 
 // print(audioResIDs);
 
